@@ -4,7 +4,7 @@ from locator import Locator
 from integrator import Integrator
 import numpy as np
 from symplectic import get_metric_mat
-from eigen_system import compute_eigenval_mat
+from eigen_system import analyse_equilibrium
 from plot import plot_traj
 
 #matplotlib.style.use('ggplot')
@@ -16,29 +16,23 @@ def main():
 
     J = get_metric_mat(2)
 
-    locate_po = True
+    locate_po = False
 
     x = np.array([0.7,1.0,0.3,-0.3])
 
-    print ("Locate minimum by minimum search of Hamiltonian")
-    mini = locator.find_min(x,method='SLSQP',bounds=((0,2),(0,2),(-1,1),(-1,1)))
-    if mini.success:
-        print("found minimum at : {}".format(mini.x))
-    else:
-        print("couldn't find minimum : {}".format(mini.message))
+    # print ("Locate minimum by minimum search of Hamiltonian")
+    # mini = locator.find_min(x,method='SLSQP',bounds=((0,2),(0,2),(-1,1),(-1,1)))
+    # if mini.success:
+    #     print("found minimum at : {}".format(mini.x))
+    # else:
+    #     print("couldn't find minimum : {}".format(mini.message))
 
     print ("Locate minimum by root finding of Hamiltonian gradient")
     mini = locator.find_saddle(x,root_method='hybr')
     if mini.success:
-        print("found minimum at : {}".format(mini.x))
-        # compute hessian at minimum
-        df = H.compute_hessian(mini.x)
-        print("hessian at critical point:\n{}".format(df))
-        eig, eigenvec = compute_eigenval_mat(df)
-        scale = lambda x: 2.0*np.pi/x 
-        periods = scale(eig)
-        for i in range(eig.size):
-            print("{}, {}\n{}".format(eig[i],periods[i],eigenvec[i]))
+        print("found critical pt at : {}\n".format(mini.x))
+        # analyse stability of critical pt
+        analyse_equilibrium(H, mini.x)
     else:
         print("couldn't find minimum : {}".format(mini.message))
 
