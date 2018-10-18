@@ -57,6 +57,6 @@ class Locator:
                             jac = None,
                             tol = self.tol,
                             callback = None,
-                            options = {'nit' : 5000}
+                            options = None
                             )
         return sol
