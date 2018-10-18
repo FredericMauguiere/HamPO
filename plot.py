@@ -1,7 +1,11 @@
 import matplotlib
-matplotlib.use('agg')
+#matplotlib.use('gg')
+#matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import os
+
+plt.style.use('ggplot')
+
 
 def plot_traj(traj, filename):
     plt.subplot(221)
@@ -26,5 +30,5 @@ def plot_traj(traj, filename):
 
     cwd = os.getcwd()
     outputfile = os.path.join(cwd,filename)
-    plt.savefig(outputfile,dpi=300)
-    #plt.show()
+    #plt.savefig(outputfile,dpi=300)
+    plt.show()

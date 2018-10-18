@@ -5,7 +5,7 @@ from integrator import Integrator
 import numpy as np
 from symplectic import get_metric_mat
 from eigen_system import compute_eigenval_mat
-from plot import plot_traj
+#from plot import plot_traj
 
 #matplotlib.style.use('ggplot')
 
@@ -38,7 +38,7 @@ def main():
         scale = lambda x: 2.0*np.pi/x 
         periods = scale(eig)
         for i in range(eig.size):
-            print("{}, {}\n{}".format(eig[i],periods[i],eigenvec[i]))
+            print("{}, {}\n{}".format(eig[i],periods[i],eigenvec[:,i]))
     else:
         print("couldn't find minimum : {}".format(mini.message))
 
@@ -46,24 +46,24 @@ def main():
     if locate_po:
         print ("Locate PO...")
         period = periods[0]+periods[0]*0.1
-        disp = np.array([0.2,0,0,0])
+        xini = mini.x + 0.1*eigenvec[:,0]
         
-        #traj = integrator.integrate_plot(x=mini.x+disp, tstart=0., tend=period,
-        #method='lsoda', npts=100)
-        #print("trajectory:\n{}".format(traj))
+        traj = integrator.integrate_plot(x=xini, tstart=0., tend=period,
+        method='lsoda', npts=100)
+        print("trajectory:\n{}".format(traj))
         #plot_traj(traj,'traj.pdf')
         
-        PO_sol = locator.locatePO(mini.x+disp,period,root_method='hybr')
+        # PO_sol = locator.locatePO(mini.x+disp,period,root_method='hybr')
 
-        if PO_sol.success:
-            print("success : {}".format(PO_sol.success))
-            #print("PO initial conditions {}".format(PO_init_cond))
+        # if PO_sol.success:
+        #     print("success : {}".format(PO_sol.success))
+        #     #print("PO initial conditions {}".format(PO_init_cond))
 
-            PO = integrator.integrate_plot(PO_sol.x,0,period,'lsoda',100)
-            plot_traj(PO,'PO.pdf')
+        #     PO = integrator.integrate_plot(PO_sol.x,0,period,'lsoda',100)
+        #     plot_traj(PO,'PO.pdf')
             
-        else:
-            print("Couldn't find PO : {}".format(PO_sol.message))
+        # else:
+        #     print("Couldn't find PO : {}".format(PO_sol.message))
 
 if __name__ == "__main__":
     main()
