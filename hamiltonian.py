@@ -17,6 +17,8 @@ class Hamiltonian:
         self.k2 = 3.0
         self.beta1 = 0.5
         self.beta2 = 1.0
+        self.c1 = 1.0
+        self.c2 = 1.0
         self.re1 = 0.5
         self.re2 = 0.7
         self.D0 = 1.0
@@ -38,9 +40,9 @@ class Hamiltonian:
         #V1 = self.D0 * pow((1.0-np.exp(-self.beta1*(x[0]-self.re1))),2)
         #V2 = self.D0 * pow((1.0-np.exp(-self.beta2*(x[1]-self.re2))),2)
         
-        # Hamonic oscillator
-        V1 = self.k1 * x[0]**2
-        V2 = self.k2 * x[1]**2
+        # anhamonic oscillator
+        V1 = self.k1 * x[0]**2 + self.c1 * x[0]**3
+        V2 = self.k2 * x[1]**2 + self.c2 * x[1]**3
         
         V = V1 + V2
 
@@ -71,9 +73,9 @@ class Hamiltonian:
         # dH/dx[1]
         #grad[1] = 2.0*self.beta2*self.D0*np.exp(-self.beta2*(x[1]-self.re2))*(1.0-np.exp(-self.beta2*(x[1]-self.re2)))
 
-        # Harmonic oscillator case
-        grad[0] = 2.0*self.k1 * x[0]
-        grad[1] = 2.0*self.k2 * x[1]
+        # anharmonic oscillator case
+        grad[0] = 2.0*self.k1 * x[0] + 3.0*self.c1 * x[0]**2
+        grad[1] = 2.0*self.k2 * x[1] + 3.0*self.c2 * x[1]**2
         
         # dH/dx[2]
         grad[2] = x[2]/self.m1
@@ -105,7 +107,7 @@ class Hamiltonian:
         # hes[3,1] = 2.0 * (self.beta2)**2.0 * self.D0 * t21**2.0 + \
         # 2.0 * self.D0 * t22 * (self.beta2)**2.0 * t22
 
-        # Harmonic oscillator case
-        hes[2,0] = -2.0*self.k1
-        hes[3,1] = -2.0*self.k2
+        # anharmonic oscillator case
+        hes[2,0] = -2.0*self.k1 - 6.0*self.c1*x[0]
+        hes[3,1] = -2.0*self.k2 - 6.0*self.c2*x[1]
         return hes

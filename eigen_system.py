@@ -25,7 +25,7 @@ def analyse_equilibrium(hamiltonian, x):
     for i in range(eig.size):
         if (np.allclose([np.real(eig[i])],[0.0]) and not np.allclose([np.imag(eig[i])],[0.0])):
             n_pure_imag += 1
-            periods.append(2.*np.pi/np.imag(eig[i]))
+            periods.append(2.*np.pi/abs(np.imag(eig[i])))
         if (np.allclose([np.imag(eig[i])],[0.0]) and not np.allclose([np.real(eig[i])],[0.0])):
             n_pure_real += 1
             if (np.real(eig[i])>0.0):
@@ -51,5 +51,5 @@ def analyse_equilibrium(hamiltonian, x):
         if (dim==n_pure_imag):
             print("critical point is a center")
             for p in periods:
-                print("center period: {}".format(p))
-    return eig, eigenvec
+                print("center harmonic period: {}".format(p))
+    return eig, eigenvec, periods
