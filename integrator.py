@@ -18,11 +18,13 @@ class Integrator:
 
         # do inttegration
         dt = (tend-tstart)/npts
-        res = np.transpose(np.concatenate((x,[tstart]), axis=0))
+        E = self.hamiltonian.compute_energy(x)
+        res = np.transpose(np.concatenate((x,[E],[tstart]), axis=0))
         for i in range(npts):
             x = integ.integrate(integ.t+dt)
+            E = self.hamiltonian.compute_energy(x)
             if integ.successful():
-                ite = np.transpose(np.concatenate((x,[integ.t]), axis=0))
+                ite = np.transpose(np.concatenate((x,[E],[integ.t]), axis=0))
                 res = np.vstack((res,ite))
         
         return res
@@ -35,7 +37,7 @@ class Integrator:
         integ = ode(self.hamiltonian.get_vector_field).set_integrator(method,atol=self.atol,rtol=self.rtol)
         integ.set_initial_value(x,tstart)
 
-        # do inttegration
+        # do integration
         #print("integration successful : {}".format(integ.successful()))
         x = integ.integrate(integ.t+tend)
         

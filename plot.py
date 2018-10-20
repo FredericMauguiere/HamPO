@@ -3,38 +3,52 @@ import matplotlib
 #matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import os
+import numpy as np
 
 plt.style.use('ggplot')
 
 
 def plot_traj(traj, filename):
+    dim = int((traj[0].size - 2)/2) # we've got energy and time as extra columns
+    print("size traj: {}".format(dim))
+
+    # prepare figures
     fig = plt.figure(figsize=(12, 10))
-    fig.add_subplot(2,2,1)
-    #plt.subplot(221)
-    plt.plot(traj[:,0],traj[:,2],c='red')
-    plt.xlabel(r'$x_1$')
-    plt.ylabel(r'$p_1$')
+    fig.tight_layout()
+    plot_number = 0
+    for i in range(dim):
+        # plot x(t)
+        plot_number += 1
+        fig.add_subplot(dim+1,3,plot_number)
+        plt.plot(traj[:,-1],traj[:,i],c='red')
+        plt.xlabel(r'$t$')
+        plt.ylabel(r'$x_{}$'.format(i))
+        # plot p(t)
+        plot_number += 1
+        p_pos = 2*i+1
+        if (i==0):
+            p_pos = dim
+        fig.add_subplot(dim+1,3,plot_number)
+        plt.plot(traj[:,-1],traj[:,p_pos],c='red')
+        plt.xlabel(r'$t$')
+        plt.ylabel(r'$p_{}$'.format(i))
+        # plot p(x)
+        plot_number += 1
+        fig.add_subplot(dim+1,3,plot_number)
+        plt.plot(traj[:,i],traj[:,p_pos],c='red')
+        plt.xlabel(r'$x_{}$'.format(i))
+        plt.ylabel(r'$p_{}$'.format(i))
 
-    fig.add_subplot(2,2,2)
-    #plt.subplot(222)
-    plt.plot(traj[:,1],traj[:,3],c='red')
-    plt.xlabel(r'$x_2$')
-    plt.ylabel(r'$p_2$')
+    plot_number += 1
+    # get exponent of energy
+    ex = np.floor(np.log10(np.abs(traj[0,-2]))).astype(int)
+    fig.add_subplot(dim+1,3,plot_number)
+    plt.plot(traj[:,-1],traj[:,-2]*10.0**(-np.floor(np.log10(np.abs(traj[0,-2]))).astype(int)),c='red')
+    plt.xlabel(r'$t$')
+    plt.ylabel(r'$E (x 10^{})$'.format(-np.abs(ex)))
 
-    fig.add_subplot(2,2,3)
-    #plt.subplot(223)
-    plt.plot(traj[:,4],traj[:,0],c='red')
-    plt.xlabel(r'time')
-    plt.ylabel(r'$x_1$')
-
-    fig.add_subplot(2,2,4)
-    #plt.subplot(224)
-    plt.plot(traj[:,4],traj[:,1],c='red')
-    plt.xlabel(r'time')
-    plt.ylabel(r'$x_2$')
-
-    #cwd = os.getcwd()
-    #outputfile = os.path.join(cwd,filename)
-    #plt.savefig(outputfile,dpi=300)
+    plt.subplots_adjust(top=0.92, bottom=0.05, left=0.10, right=0.95, hspace=0.5,
+                    wspace=0.35)
     plt.show()
     #plt.show(block=False)
+    

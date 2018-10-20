@@ -40,25 +40,25 @@ def main():
     if locate_po and mini.success:
         print ("Locate PO...")
         period = periods[0] + periods[0]*0.1
-        dev = np.array([0.3,0,0,0])
+        dev = np.array([0,0,0.3,0])
         xini = mini.x + dev #0.1*eigv[:,0]
         
-        # traj = integrator.integrate_plot(x=xini, tstart=0., tend=period,
-        # method='lsoda', npts=100)
-        # #print("trajectory:\n{}".format(traj))
-        # plot_traj(traj,'traj.pdf')
+        traj = integrator.integrate_plot(x=xini, tstart=0., tend=period,
+        method='lsoda', npts=100)
+        print("trajectory:\n{}".format(traj))
+        plot_traj(traj,'traj.pdf')
         
-        PO_sol = locator.locatePO(xini,period,root_method='broyden1')
+        # PO_sol = locator.locatePO(xini,period,root_method='broyden1')
 
-        if PO_sol.success:
-            print("success : {}".format(PO_sol.success))
-            print("PO initial conditions {}".format(PO_sol.x))
+        # if PO_sol.success:
+        #     print("success : {}".format(PO_sol.success))
+        #     print("PO initial conditions {}".format(PO_sol.x))
 
-            PO = integrator.integrate_plot(PO_sol.x,0,period,'lsoda',100)
-            plot_traj(PO,'PO.pdf')
+        #     PO = integrator.integrate_plot(PO_sol.x,0,period,'lsoda',100)
+        #     plot_traj(PO,'PO.pdf')
             
-        else:
-            print("Couldn't find PO : {}".format(PO_sol.message))
+        # else:
+        #     print("Couldn't find PO : {}".format(PO_sol.message))
 
 if __name__ == "__main__":
     main()
