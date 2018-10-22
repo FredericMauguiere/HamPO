@@ -61,6 +61,7 @@ class Hamiltonian:
         J = get_metric_mat(self.dof)
         gradH = self.get_grad(x)
         vf = np.matmul(J,gradH)
+        # print("vect field type: {}".format(type(vf)))
 
         return vf
 
@@ -84,7 +85,7 @@ class Hamiltonian:
         
         return grad
 
-    def compute_hessian(self,x):
+    def compute_hessian(self,t,x):
         """
         Compute Hessian matrix (second derivatives of Hamiltonian)
         at point x
@@ -111,3 +112,16 @@ class Hamiltonian:
         hes[2,0] = -2.0*self.k1 - 6.0*self.c1*x[0]
         hes[3,1] = -2.0*self.k2 - 6.0*self.c2*x[1]
         return hes
+
+    def vect_field_traj_variational(self,t,x):
+        """
+        vector containing vector field + derivativates for
+        variational equations
+        We concatenate everything into a 2n+4n^2 big vector
+        (n = nbre of dof)
+        """
+        vect_field = self.get_vector_field(t,x)
+        hess = self.compute_hessian(t,x)
+        der_flow = np.array(hess).flatten()
+        full_vect_field = np.concatenate((vect_field, der_flow))
+        return full_vect_field

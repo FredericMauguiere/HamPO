@@ -6,6 +6,7 @@ import numpy as np
 from symplectic import get_metric_mat
 from eigen_system import analyse_equilibrium
 from plot import plot_traj
+from scipy.optimize import show_options
 
 #matplotlib.style.use('ggplot')
 
@@ -32,33 +33,39 @@ def main():
     if mini.success:
         print("found critical pt at : {}\n".format(mini.x))
         # analyse stability of critical pt
-        eig, eigv, periods = analyse_equilibrium(H, mini.x)
+        eig, eigv, periods = analyse_equilibrium(H, 0.0, mini.x)
     else:
         print("couldn't find minimum : {}".format(mini.message))
 
+    # just to get options for specific solver
+    # show_options(solver='root', method='broyden1', disp=True)
 
     if locate_po and mini.success:
-        print ("Locate PO...")
-        period = periods[0] + periods[0]*0.1
-        dev = np.array([0,0,0.3,0])
+        print ("\n\n########################\nTrying to locate PO...")
+        period = periods[0] + periods[0]*0.05
+        dev = np.array([0.5,0,0.1,0])
         xini = mini.x + dev #0.1*eigv[:,0]
         
-        traj = integrator.integrate_plot(x=xini, tstart=0., tend=period,
-        method='lsoda', npts=100)
-        print("trajectory:\n{}".format(traj))
-        plot_traj(traj,'traj.pdf')
+        # variational_0 = np.array(np.identity(2*H.dof)).flatten()
+        # xstart = np.concatenate((xini, variational_0))
+        # print("xstart:\n{}".format(xstart))
+        # traj = integrator.integrate_variational_plot(x=xstart, tstart=0., tend=period, npts=50)
+        # # traj = integrator.integrate_plot(x=xini, tstart=0., tend=period, npts=50)
+        # print("trajectory:\n{}".format(traj[-1]))
+        # plot_traj(traj,H.dof,'traj.pdf')
         
-        # PO_sol = locator.locatePO(xini,period,root_method='broyden1')
+        PO_sol = locator.locatePO(xini,period,root_method='broyden1',integration_method="dop853")
 
-        # if PO_sol.success:
-        #     print("success : {}".format(PO_sol.success))
-        #     print("PO initial conditions {}".format(PO_sol.x))
+        if PO_sol.success:
+            print("success : {}".format(PO_sol.success))
+            print("PO initial conditions {}".format(PO_sol.x))
 
-        #     PO = integrator.integrate_plot(PO_sol.x,0,period,'lsoda',100)
-        #     plot_traj(PO,'PO.pdf')
+            PO = integrator.integrate_plot(PO_sol.x,0,period,'dop853',100)
+            print("PO:\n{}".format(PO))
+            plot_traj(PO,H.dof,'PO.pdf')
             
-        # else:
-        #     print("Couldn't find PO : {}".format(PO_sol.message))
+        else:
+            print("Couldn't find PO : {}".format(PO_sol.message))
 
 if __name__ == "__main__":
     main()

@@ -8,13 +8,13 @@ def compute_eigenval_mat(M):
     """
     return LA.eig(M)
 
-def analyse_equilibrium(hamiltonian, x):
+def analyse_equilibrium(hamiltonian, t, x):
     """
     Analyses linear stability of equilibrium pt
     """
     dim = x.size
     # compute matrix of derivatives of vector field at equilibrium
-    df =  hamiltonian.compute_hessian(x)
+    df =  hamiltonian.compute_hessian(t, x)
     eig, eigenvec = compute_eigenval_mat(df)
     n_pure_imag = 0
     n_pure_real = 0
