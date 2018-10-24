@@ -28,8 +28,8 @@ class Locator:
         extra_args = period, integration_method
         options = {
             'maxiter' : 1000,
-            'ftol' : 1.e-1,
-            'fatol' : 1.e-1,
+            'ftol' : 1.e-12,
+            'fatol' : 1.e-12,
         }
         sol = optimize.root(fun = self.func,
                             x0 = xinit,
@@ -40,22 +40,6 @@ class Locator:
                             callback = self.locatePO_callback,
                             options = None
                             )
-        
-        # sol = optimize.broyden1(F = self.func2, 
-        #                         xin = xinit, 
-        #                         iter=None, 
-        #                         alpha=None, 
-        #                         reduction_method='restart', 
-        #                         max_rank=None, 
-        #                         verbose=False, 
-        #                         maxiter=1000, 
-        #                         f_tol=None, 
-        #                         f_rtol=None, 
-        #                         x_tol=None, 
-        #                         x_rtol=None, 
-        #                         tol_norm=None,
-        #                         line_search='armijo', 
-        #                         callback=self.locatePO_callback)
         return sol
 
     def func(self,x,period,integration_method):

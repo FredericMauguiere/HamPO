@@ -122,6 +122,8 @@ class Hamiltonian:
         """
         vect_field = self.get_vector_field(t,x)
         hess = self.compute_hessian(t,x)
-        der_flow = np.array(hess).flatten()
+        flow_sol_mat = np.reshape(x[2*self.dof:],(2*self.dof, 2*self.dof))
+        der_flow = np.matmul(hess,flow_sol_mat)
+        der_flow = der_flow.flatten()
         full_vect_field = np.concatenate((vect_field, der_flow))
         return full_vect_field

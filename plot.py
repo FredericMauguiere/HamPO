@@ -41,11 +41,13 @@ def plot_traj(traj, dof, filename):
 
     plot_number += 1
     # get exponent of energy
-    ex = np.floor(np.log10(np.abs(traj[0,-2]))).astype(int)
+    # ex = np.floor(np.log10(np.abs(traj[0,-2]))).astype(int)
     fig.add_subplot(dof+1,3,plot_number)
-    plt.plot(traj[:,-1],traj[:,-2]*10.0**(-np.floor(np.log10(np.abs(traj[0,-2]))).astype(int)),c='red')
+    # plt.plot(traj[:,-1],traj[:,-2]*10.0**(-np.floor(np.log10(np.abs(traj[0,-2]))).astype(int)),c='red')
+    plt.plot(traj[:,-1],traj[:,-2],c='red')
     plt.xlabel(r'$t$')
-    plt.ylabel(r'$E (x 10^{})$'.format(-np.abs(ex)))
+    # plt.ylabel(r'$E (x 10^{})$'.format(-np.abs(ex)))
+    plt.ylabel(r'$E$')
 
     plt.subplots_adjust(top=0.92, bottom=0.05, left=0.10, right=0.95, hspace=0.5,
                     wspace=0.35)
