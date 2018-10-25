@@ -17,9 +17,11 @@ def main():
 
     J = get_metric_mat(2)
 
-    locate_po = True
+    locate_po = False
 
     x = np.array([0.7,1.0,0.3,-0.3])
+
+    print("sympy E = {}".format(H.compute_energy(x)))
 
     # print ("Locate minimum by minimum search of Hamiltonian")
     # mini = locator.find_min(x,method='SLSQP',bounds=((0,2),(0,2),(-1,1),(-1,1)))
@@ -28,14 +30,14 @@ def main():
     # else:
     #     print("couldn't find minimum : {}".format(mini.message))
 
-    print ("Locate minimum by root finding of Hamiltonian gradient")
-    mini = locator.find_saddle(x,root_method='hybr')
-    if mini.success:
-        print("found critical pt at : {}\n".format(mini.x))
-        # analyse stability of critical pt
-        eig, eigv, periods = analyse_equilibrium(H, 0.0, mini.x)
-    else:
-        print("couldn't find minimum : {}".format(mini.message))
+    # print ("Locate minimum by root finding of Hamiltonian gradient")
+    # mini = locator.find_saddle(x,root_method='hybr')
+    # if mini.success:
+    #     print("found critical pt at : {}\n".format(mini.x))
+    #     # analyse stability of critical pt
+    #     eig, eigv, periods = analyse_equilibrium(H, 0.0, mini.x)
+    # else:
+    #     print("couldn't find minimum : {}".format(mini.message))
 
     # just to get options for specific solver
     # show_options(solver='root', method='broyden1', disp=True)

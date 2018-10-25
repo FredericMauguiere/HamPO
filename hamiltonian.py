@@ -1,5 +1,6 @@
 import numpy as np
 from symplectic import get_metric_mat
+from sympy import *
 
 # Hamiltonian class
 class Hamiltonian:
@@ -22,32 +23,56 @@ class Hamiltonian:
         self.re1 = 0.5
         self.re2 = 0.7
         self.D0 = 1.0
+
+        print("define phase space coordinates")
+        self.x = []
+        for i in range(2*self.dof):
+            name = 'self.x' + str(i)
+            print("coordinate {}: {}".format(i,name))
+            print("command : %s = Symbol('x%d')" % (name,i))
+            exec("%s = Symbol('x%d')" % (name,i))
+            exec("self.x.append(%s)" % (name))
+        print(self.x)
+
+        # define Hamiltonian function
+        self.h = self.x[2]**2/(2.0*self.m1) +\
+                 self.x[3]**2/(2.0*self.m2) +\
+                 self.k1 * self.x[0]**2 + self.c1 * self.x[0]**3 +\
+                 self.k2 * self.x[1]**2 + self.c2 * self.x[1]**3
+        print("Hamiltonian:\n{}".format(self.h))
+
     
-    def compute_energy(self,x):
+    def compute_energy(self,x_):
         """
         Compute Energy
         @param x input numpy vector, phase space coordinates
         @param t input scalar, time
         @return Energy scalar
         """
-        # kinetic energy
-        T1 = x[2]**2/(2.0*self.m1)
-        T2 = x[3]**2/(2.0*self.m2)
-        #T12 = -x[2]*x[3]/(m1*m2/(m1+m2))
-        T = T1 + T2 #+ T12
-	
-        # Morse potential energy
-        #V1 = self.D0 * pow((1.0-np.exp(-self.beta1*(x[0]-self.re1))),2)
-        #V2 = self.D0 * pow((1.0-np.exp(-self.beta2*(x[1]-self.re2))),2)
-        
-        # anhamonic oscillator
-        V1 = self.k1 * x[0]**2 + self.c1 * x[0]**3
-        V2 = self.k2 * x[1]**2 + self.c2 * x[1]**3
-        
-        V = V1 + V2
+        # sympy
+        # for i in range
+        # fvars = [] #these probably already exist, use: fvars = [x,y]
+        Energy = self.h.subs(self.x, x_).evalf()
+        # E = evalf(self.h, subs = dict(zip(self.x,x)))
 
-        # energy
-        Energy = T+V
+        # # kinetic energy
+        # T1 = x[2]**2/(2.0*self.m1)
+        # T2 = x[3]**2/(2.0*self.m2)
+        # #T12 = -x[2]*x[3]/(m1*m2/(m1+m2))
+        # T = T1 + T2 #+ T12
+	
+        # # Morse potential energy
+        # #V1 = self.D0 * pow((1.0-np.exp(-self.beta1*(x[0]-self.re1))),2)
+        # #V2 = self.D0 * pow((1.0-np.exp(-self.beta2*(x[1]-self.re2))),2)
+        
+        # # anhamonic oscillator
+        # V1 = self.k1 * x[0]**2 + self.c1 * x[0]**3
+        # V2 = self.k2 * x[1]**2 + self.c2 * x[1]**3
+        
+        # V = V1 + V2
+
+        # # energy
+        # Energy = T+V
 
         return Energy
 
