@@ -1,2 +1,2 @@
 # HamPO
-Periodic Orbits in Hamiltonian systems
+Location and analysis of Periodic Orbits in Hamiltonian systems
