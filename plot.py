@@ -1,6 +1,4 @@
 import matplotlib
-#matplotlib.use('gg')
-#matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import os
 import numpy as np
@@ -9,9 +7,9 @@ plt.style.use('ggplot')
 
 
 def plot_traj(traj, dof, filename):
-    dim = int((dof - 2)/2) # we've got energy and time as extra columns
-    print("size traj: {}".format(dim))
-
+    """
+    Plot a trajectory
+    """
     # prepare figures
     fig = plt.figure(figsize=(12, 10))
     fig.tight_layout()
@@ -20,7 +18,8 @@ def plot_traj(traj, dof, filename):
         # plot x(t)
         plot_number += 1
         fig.add_subplot(dof+1,3,plot_number)
-        plt.plot(traj[:,-1],traj[:,i],c='red')
+        for j in range(len(traj)):
+            plt.plot(traj[j][:,-1],traj[j][:,i])
         plt.xlabel(r'$t$')
         plt.ylabel(r'$x_{}$'.format(i))
         # plot p(t)
@@ -29,13 +28,15 @@ def plot_traj(traj, dof, filename):
         if (i==0):
             p_pos = dof
         fig.add_subplot(dof+1,3,plot_number)
-        plt.plot(traj[:,-1],traj[:,p_pos],c='red')
+        for j in range(len(traj)):
+            plt.plot(traj[j][:,-1],traj[j][:,p_pos])
         plt.xlabel(r'$t$')
         plt.ylabel(r'$p_{}$'.format(i))
         # plot p(x)
         plot_number += 1
         fig.add_subplot(dof+1,3,plot_number)
-        plt.plot(traj[:,i],traj[:,p_pos],c='red')
+        for j in range(len(traj)):
+            plt.plot(traj[j][:,i],traj[j][:,p_pos])
         plt.xlabel(r'$x_{}$'.format(i))
         plt.ylabel(r'$p_{}$'.format(i))
 
@@ -44,7 +45,8 @@ def plot_traj(traj, dof, filename):
     # ex = np.floor(np.log10(np.abs(traj[0,-2]))).astype(int)
     fig.add_subplot(dof+1,3,plot_number)
     # plt.plot(traj[:,-1],traj[:,-2]*10.0**(-np.floor(np.log10(np.abs(traj[0,-2]))).astype(int)),c='red')
-    plt.plot(traj[:,-1],traj[:,-2],c='red')
+    for j in range(len(traj)):
+            plt.plot(traj[j][:,-1],traj[j][:,-2])
     plt.xlabel(r'$t$')
     # plt.ylabel(r'$E (x 10^{})$'.format(-np.abs(ex)))
     plt.ylabel(r'$E$')

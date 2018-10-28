@@ -27,9 +27,9 @@ class Locator:
         self.integration_method = integration_method
         extra_args = period, integration_method
         options = {
-            'maxiter' : 1000,
-            'ftol' : 1.e-12,
-            'fatol' : 1.e-12,
+            'maxiter' : 2000,
+            'ftol' : 1.e-14,
+            'fatol' : 1.e-14,
         }
         sol = optimize.root(fun = self.func,
                             x0 = xinit,

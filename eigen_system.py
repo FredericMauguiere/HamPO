@@ -1,5 +1,6 @@
 import numpy as np
 from numpy import linalg as LA
+from symplectic import get_metric_mat
 
 def compute_eigenval_mat(M):
     """
@@ -14,7 +15,8 @@ def analyse_equilibrium(hamiltonian, t, x):
     """
     dim = x.size
     # compute matrix of derivatives of vector field at equilibrium
-    df =  hamiltonian.compute_hessian(t, x)
+    J = get_metric_mat(hamiltonian.dof)
+    df =  np.matmul(J,hamiltonian.get_hessian(t, x))
     eig, eigenvec = compute_eigenval_mat(df)
     n_pure_imag = 0
     n_pure_real = 0
